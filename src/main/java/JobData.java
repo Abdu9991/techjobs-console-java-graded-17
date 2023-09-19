@@ -6,10 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.*;
 /**
  * Created by LaunchCode
  */
@@ -41,6 +40,8 @@ public class JobData {
                 values.add(aValue);
             }
         }
+        // Bonus mission: sort the results
+        Collections.sort(values);
 
         return values;
     }
@@ -50,13 +51,13 @@ public class JobData {
         // load data, if not already loaded
         loadData();
 
-        return allJobs;
+        // Bonus mission; normal version returns allJobs
+        return new ArrayList<>(allJobs);
     }
 
     /**
      * Returns results of search the jobs data by key/value, using
      * inclusion of the search term.
-     *
      * For example, searching for employer "Enterprise" will include results
      * with "Enterprise Holdings, Inc".
      *
@@ -75,7 +76,7 @@ public class JobData {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            if (aValue.toUpperCase().contains(value.toUpperCase())) {
                 jobs.add(row);
             }
         }
@@ -95,7 +96,18 @@ public class JobData {
         loadData();
 
         // TODO - implement this method
-        return null;
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> row : allJobs) {
+            for (String entry : row.values()) {
+                if (entry.toUpperCase().contains(value.toUpperCase())) {
+                    if (!jobs.contains(row)) {
+                        jobs.add((row));
+                    }
+                }
+            }
+        }
+        return jobs;
     }
 
     /**
